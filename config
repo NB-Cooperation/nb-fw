@@ -2,7 +2,6 @@ rendezvous_server = 'rustdesk.nb-cooperation.de:21116'
 nat_type = 2
 serial = 0
 unlock_pin = ''
-trusted_devices = '00zEZSjS+mUzhYNA6Iv8E8YQBk'
 
 [options]
 av1-test = 'N'
@@ -10,6 +9,5 @@ access-mode = 'full'
 custom-rendezvous-server = 'rustdesk.nb-cooperation.de'
 relay-server = 'rustdesk.nb-cooperation.de'
 key = 'WfNbqF6lTmn6FudqbFjttqZoTnOdWuMLPMAOjpaHDpk='
-verification-method = 'use-permanent-password'
 local-ip-addr = '0.0.0.0'
 enable-lan-discovery = 'N'
