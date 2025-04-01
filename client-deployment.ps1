@@ -1,10 +1,5 @@
 $ErrorActionPreference= 'silentlycontinue'
 
-# Get your config string from your Web portal and Fill Below
-$rustdesk_cfg="Qfi0zawREShBnaPFUTQxUT1dFZP5GVvpVc0RnaGJWckVnR24WbUxmNGFnYOZ2ViojI5V2aiwiIiojIpBXYiwiIlRmLu9Wa0FmclB3bvNWLi5mLrNXZkR3c1JnI6ISehxWZyJCLiUGZu42bpRXYyVGcv92YtImbus2clRGdzVnciojI0N3boJye"
-
-################################### Please Do Not Edit Below This Line #########################################
-
 # This function will return the latest version and download link as an object
 function getLatest()
 {
@@ -50,7 +45,7 @@ $RustDeskOnGitHub = getLatest
 
 cd $env:USERPROFILE\Downloads
 
-Invoke-WebRequest $RustDeskOnGitHub.Downloadlink -Outfile "rustdesk.exe"
+Start-BitsTransfer -Source $RustDeskOnGitHub.Downloadlink -Destination "rustdesk.exe"
+Invoke-WebRequest https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config -Outfile $env:USERPROFILE\AppData\Roaming\RustDesk\config\RustDesk2.toml
 .\rustdesk.exe 
 Start-Sleep -seconds 2
-.\rustdesk.exe -config $rustdesk_cfg
