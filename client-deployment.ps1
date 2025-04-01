@@ -4,7 +4,7 @@ $ErrorActionPreference= 'silentlycontinue'
 $rustdesk_pw=(-join ((65..90) + (97..122) | Get-Random -Count 12 | % {[char]$_}))
 
 # Get your config string from your Web portal and Fill Below
-$rustdesk_cfg="==Qfi0zawREShBnaPFUTQxUT1dFZP5GVvpVc0RnaGJWckVnR24WbUxmNGFnYOZ2ViojI5V2aiwiIiojIpBXYiwiIlRmLu9Wa0FmclB3bvNWLi5mLrNXZkR3c1JnI6ISehxWZyJCLiUGZu42bpRXYyVGcv92YtImbus2clRGdzVnciojI0N3boJye"
+$rustdesk_cfg="Qfi0zawREShBnaPFUTQxUT1dFZP5GVvpVc0RnaGJWckVnR24WbUxmNGFnYOZ2ViojI5V2aiwiIiojIpBXYiwiIlRmLu9Wa0FmclB3bvNWLi5mLrNXZkR3c1JnI6ISehxWZyJCLiUGZu42bpRXYyVGcv92YtImbus2clRGdzVnciojI0N3boJye"
 
 ################################### Please Do Not Edit Below This Line #########################################
 
