@@ -43,7 +43,8 @@ function getLatest()
 
 $RustDeskOnGitHub = getLatest
 
-cd $env:USERPROFILE\Downloads
+New-Item -Path "$env:APPDATA\RustDesk\config" -ItemType Directory -Force
+Set-Location $env:USERPROFILE\Downloads
 
 Start-BitsTransfer -Source $RustDeskOnGitHub.Downloadlink -Destination "rustdesk.exe"
 Invoke-WebRequest https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config -Outfile $env:USERPROFILE\AppData\Roaming\RustDesk\config\RustDesk2.toml
