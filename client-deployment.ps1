@@ -43,10 +43,14 @@ function getLatest()
 
 $RustDeskOnGitHub = getLatest
 
-New-Item -Path "$env:APPDATA\RustDesk\config" -ItemType Directory -Force
+if (-not (Test-Path "$env:APPDATA\RustDesk\config\RustDesk2.toml")) {
+    New-Item -Path "$env:APPDATA\RustDesk\config" -ItemType Directory -Force
+    Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile "$env:APPDATA\RustDesk\config\RustDesk2.toml"
+}
+
 Set-Location $env:USERPROFILE\Downloads
 
 Start-BitsTransfer -Source $RustDeskOnGitHub.Downloadlink -Destination "rustdesk.exe"
-Invoke-WebRequest https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config -Outfile $env:USERPROFILE\AppData\Roaming\RustDesk\config\RustDesk2.toml
+
 .\rustdesk.exe 
 Start-Sleep -seconds 2
