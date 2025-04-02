@@ -96,4 +96,5 @@ while ($arrService.Status -ne 'Running')
     $arrService.Refresh()
 }
 
-cmd /c start $env:ProgramFiles\RustDesk\rustdesk.exe
+Set-Location $env:ProgramFiles\RustDesk\
+Start-Process .\rustdesk.exe
