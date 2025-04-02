@@ -1,7 +1,5 @@
 $ErrorActionPreference= 'silentlycontinue'
 
-################################### Please Do Not Edit Below This Line #########################################
-
 # Run as administrator and stays in the current directory
 if (-Not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
 {
@@ -98,5 +96,4 @@ while ($arrService.Status -ne 'Running')
     $arrService.Refresh()
 }
 
-cd $env:ProgramFiles\RustDesk\
-.\rustdesk.exe
+Start-Process $env:ProgramFiles\RustDesk\rustdesk.exe
