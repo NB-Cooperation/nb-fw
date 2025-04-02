@@ -38,7 +38,7 @@ $version = [regex]::Match($RustDeskOnGitHub.browser_download_url, "\d+\.\d+\.\d+
 if ($rdver -eq $version)
 {
     Write-Output "RustDesk $rdver is the newest version."
-    #Exit
+    Exit
 }
 
 if (!(Test-Path C:\Temp))
