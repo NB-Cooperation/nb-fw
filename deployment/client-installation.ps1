@@ -10,45 +10,21 @@ if (-Not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     }
 }
 
-# This function will return the latest version and download link as an object
+# This function will return the latest version and download link
 function getLatest()
 {
-    $Page = Invoke-WebRequest -Uri 'https://github.com/rustdesk/rustdesk/releases/latest' -UseBasicParsing
-    $HTML = New-Object -Com "HTMLFile"
-    try
-    {
-        $HTML.IHTMLDocument2_write($Page.Content)
-    }
-    catch
-    {
-        $src = [System.Text.Encoding]::Unicode.GetBytes($Page.Content)
-        $HTML.write($src)
-    }
-
-    # Current example link: https://github.com/rustdesk/rustdesk/releases/download/1.2.6/rustdesk-1.2.6-x86_64.exe
-    $Downloadlink = ($HTML.Links | Where {$_.href -match '(.)+\/rustdesk\/rustdesk\/releases\/download\/\d{1}.\d{1,2}.\d{1,2}(.{0,3})\/rustdesk(.)+x86_64.exe'} | select -first 1).href
-
-    # bugfix - sometimes you need to replace "about:"
-    $Downloadlink = $Downloadlink.Replace('about:', 'https://github.com')
-
-    $Version = "unknown"
-    if ($Downloadlink -match './rustdesk/rustdesk/releases/download/(?<content>.*)/rustdesk-(.)+x86_64.exe')
-    {
-        $Version = $matches['content']
+    # Get the latest release
+    $latestRelease = Invoke-RestMethod -Uri "https://api.github.com/repos/rustdesk/rustdesk/releases/latest"
+    
+    # Find the x86_64.exe asset
+    $asset = $latestRelease.assets | Where-Object { $_.name -like "*x86_64.exe" } | Select-Object -First 1
+    
+    if (-not $asset) {
+        Write-Error "x86_64.exe file not found in latest release!"
+        exit 1
     }
 
-    if ($Version -eq "unknown" -or $Downloadlink -eq "")
-    {
-        Write-Output "ERROR: Version or download link not found."
-        Exit
-    }
-
-    # Create object to return
-    $params += @{Version = $Version}
-    $params += @{Downloadlink = $Downloadlink}
-    $Result = New-Object PSObject -Property $params
-
-    return($Result)
+    return($asset)
 }
 
 $RustDeskOnGitHub = getLatest
@@ -73,7 +49,7 @@ if (!(Test-Path C:\Temp))
 
 cd C:\Temp
 
-Start-BitsTransfer -Source $RustDeskOnGitHub.Downloadlink -Destination "rustdesk.exe"
+Start-BitsTransfer -Source $RustDeskOnGitHub.browser_download_url -Destination "rustdesk.exe"
 Start-Process .\rustdesk.exe --silent-install
 Start-Sleep -seconds 20
 
