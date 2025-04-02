@@ -10,7 +10,6 @@ if (-Not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     }
 }
 
-# This function will return the latest version and download link
 function getLatest()
 {
     # Get the latest release
@@ -35,11 +34,11 @@ if (-not (Test-Path "$env:APPDATA\RustDesk\config\RustDesk2.toml")) {
 }
 
 $rdver = ((Get-ItemProperty  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\RustDesk\").Version)
-
-if ($rdver -eq $RustDeskOnGitHub.Version)
+$version = [regex]::Match($RustDeskOnGitHub.browser_download_url, "\d+\.\d+\.\d+").Value
+if ($rdver -eq $version.)
 {
     Write-Output "RustDesk $rdver is the newest version."
-    Exit
+    #Exit
 }
 
 if (!(Test-Path C:\Temp))
