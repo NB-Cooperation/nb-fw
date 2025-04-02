@@ -35,7 +35,7 @@ if (-not (Test-Path "$env:APPDATA\RustDesk\config\RustDesk2.toml")) {
 
 $rdver = ((Get-ItemProperty  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\RustDesk\").Version)
 $version = [regex]::Match($RustDeskOnGitHub.browser_download_url, "\d+\.\d+\.\d+").Value
-if ($rdver -eq $version.)
+if ($rdver -eq $version)
 {
     Write-Output "RustDesk $rdver is the newest version."
     #Exit
