@@ -1,13 +1,13 @@
 $ErrorActionPreference= 'silentlycontinue'
 
-# Run as administrator and stays in the current directory
-if (-Not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
-    if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000)
-    {
-        Start-Process PowerShell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"cd '$pwd'; & '$PSCommandPath';`"";
-        Exit;
-    }
+# Run as admin
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+
+    $scriptUrl = "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/deployment/client-installation.ps1"
+    
+    $arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"irm $scriptUrl | iex`""
+    Start-Process powershell -Verb RunAs -ArgumentList $arguments
+    exit
 }
 
 function getLatest()
