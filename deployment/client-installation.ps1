@@ -28,9 +28,20 @@ function getLatest()
 
 $RustDeskOnGitHub = getLatest
 
-if (-not (Test-Path "$env:APPDATA\RustDesk\config\RustDesk2.toml")) {
-    New-Item -Path "$env:APPDATA\RustDesk\config" -ItemType Directory -Force
-    Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile "$env:APPDATA\RustDesk\config\RustDesk2.toml"
+$usersPath = "C:\Users"
+$users = Get-ChildItem -Path $usersPath -Directory | Where-Object { $_.Name -ne "Public" }
+
+foreach ($user in $users) {
+    $appDataPath = Join-Path -Path $user.FullName -ChildPath "AppData\Roaming\RustDesk\config"
+    $filePath = Join-Path -Path $appDataPath -ChildPath "RustDesk2.toml"
+
+    if (-not (Test-Path $filePath)) {
+        New-Item -Path $appDataPath -ItemType Directory -Force | Out-Null
+        Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
+        Write-Host "Konfigurationsdatei für $($user.Name) erstellt."
+    } else {
+        Write-Host "Datei für $($user.Name) existiert bereits – übersprungen."
+    }
 }
 
 $rdver = ((Get-ItemProperty  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\RustDesk\").Version)
