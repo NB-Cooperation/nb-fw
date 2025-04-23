@@ -32,11 +32,8 @@ $usersPath = "C:\Users"
 $users = Get-ChildItem -Path $usersPath -Directory | Where-Object { $_.Name -ne "Public" }
 
 foreach ($user in $users) {
-    $appDataPath = Join-Path -Path $user.FullName -ChildPath "AppData\Roaming\RustDesk\config"
-    $filePath = Join-Path -Path $appDataPath -ChildPath "RustDesk2.toml"
+    
 
-    New-Item -Path $appDataPath -ItemType Directory -Force | Out-Null
-    Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
     Write-Host "Konfigurationsdatei für $($user.Name) erstellt."
 
 }
@@ -79,3 +76,7 @@ while ($arrService.Status -ne 'Running')
     $arrService.Refresh()
 }
 
+$filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
+Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
+
+Restart-Computer -Force
