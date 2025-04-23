@@ -68,9 +68,17 @@ while ($arrService.Status -ne 'Running')
     $arrService.Refresh()
 }
 
+cd cd $env:ProgramFiles\RustDesk
+Start-Process .\rustdesk.exe
+Start-Sleep -seconds 5
+Stop-Process -Name "rustdesk" -Force
+Start-Service $ServiceName
 
 Write-Output "Installing config file"
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
 Remove-Item -Path $filepath -Force
 Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
-Start-Sleep -seconds 3
+Start-Sleep -seconds 5
+
+Start-Service $ServiceName
+Start-Process .\rustdesk.exe
