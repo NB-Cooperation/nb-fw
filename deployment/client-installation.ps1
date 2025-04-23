@@ -45,6 +45,14 @@ if (!(Test-Path C:\Temp))
 cd C:\Temp
 
 Start-BitsTransfer -Source $RustDeskOnGitHub.browser_download_url -Destination "rustdesk.exe"
+
+$filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
+Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
+
+Start-Process .\rustdesk.exe
+Start-Sleep -seconds 10
+Stop-Process -Name "rustdesk" -Force
+
 Start-Process .\rustdesk.exe --silent-install
 Start-Sleep -seconds 20
 
@@ -66,8 +74,5 @@ while ($arrService.Status -ne 'Running')
     Start-Sleep -seconds 5
     $arrService.Refresh()
 }
-
-$filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
-Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
 
 Restart-Computer -Force
