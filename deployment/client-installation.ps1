@@ -31,12 +31,6 @@ $RustDeskOnGitHub = getLatest
 $usersPath = "C:\Users"
 $users = Get-ChildItem -Path $usersPath -Directory | Where-Object { $_.Name -ne "Public" }
 
-foreach ($user in $users) {
-    
-
-    Write-Host "Konfigurationsdatei für $($user.Name) erstellt."
-
-}
 
 $rdver = ((Get-ItemProperty  "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\RustDesk\").Version)
 $version = [regex]::Match($RustDeskOnGitHub.browser_download_url, "\d+\.\d+\.\d+").Value
