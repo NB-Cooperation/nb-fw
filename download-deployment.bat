@@ -1,32 +1,19 @@
 @echo off
-setlocal
 
-REM Zielverzeichnis
-set "tempDir=C:\Temp"
-set "scriptFile=%tempDir%\client-installation.ps1"
+:: --------------------------------------------------
+:: Batch-Script: Download, Ausführen und Cleanup ohne Admin-Rechte
+:: --------------------------------------------------
 
-REM Verzeichnis erstellen, falls es nicht existiert
-if not exist "%tempDir%" (
-    mkdir "%tempDir%"
-)
+:: 1. Ordner C:\Temp erstellen, falls nicht vorhanden
+if not exist "C:\Temp" mkdir "C:\Temp"
 
-REM PowerShell-Skript herunterladen
-powershell -NoProfile -Command ^
-    "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/deployment/client-deployment.ps1' -OutFile '%scriptFile%'"
+:: 2. Powershell-Script herunterladen
+powershell -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/deployment/client-deployment.ps1' -OutFile 'C:\Temp\client-deployment.ps1'"
 
-REM PowerShell-Prozess starten und auf dessen Ende warten
-powershell -NoProfile -ExecutionPolicy Bypass -File "%scriptFile%"
-if errorlevel 1 (
-    echo [Fehler] PowerShell-Skript hat mit Fehlercode %errorlevel% beendet.
-) else (
-    echo [Info] PowerShell-Skript erfolgreich abgeschlossen.
-)
+:: 3. Script ausführen und auf Beendigung warten
+powershell -ExecutionPolicy Bypass -NoProfile -File "C:\Temp\client-deployment.ps1"
 
-REM Warten kurz zur Sicherheit (optional, kann entfernt werden)
-timeout /t 2 /nobreak >nul
+:: 4. Aufräumen: Script und Ordner wieder löschen
+rd /s /q "C:\Temp"
 
-REM Aufräumen: Skript und Verzeichnis löschen
-del /f /q "%scriptFile%"
-rmdir /s /q "%tempDir%"
-
-endlocal
+exit /b
