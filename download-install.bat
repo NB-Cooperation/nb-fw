@@ -1,32 +1,27 @@
 @echo off
-setlocal
 
-REM Zielverzeichnis
-set "tempDir=C:\Temp"
-set "scriptFile=%tempDir%\client-installation.ps1"
+:: --------------------------------------------------
+:: Batch-Script: Download, Ausführen und Cleanup
+:: --------------------------------------------------
 
-REM Verzeichnis erstellen, falls es nicht existiert
-if not exist "%tempDir%" (
-    mkdir "%tempDir%"
+:: 1. Als Administrator neu starten, falls nicht bereits erhöht
+net session >nul 2>&1
+if %errorLevel% NEQ 0 (
+    echo Starte mit Administrator-Rechten...
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb runAs"
+    exit /b
 )
 
-REM PowerShell-Skript herunterladen
-powershell -NoProfile -Command ^
-    "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/deployment/client-installation.ps1' -OutFile '%scriptFile%'"
+:: 2. Ordner C:\Temp erstellen, falls nicht vorhanden
+if not exist "C:\Temp" mkdir "C:\Temp"
 
-REM PowerShell-Prozess starten und auf dessen Ende warten
-powershell -NoProfile -ExecutionPolicy Bypass -File "%scriptFile%"
-if errorlevel 1 (
-    echo [Fehler] PowerShell-Skript hat mit Fehlercode %errorlevel% beendet.
-) else (
-    echo [Info] PowerShell-Skript erfolgreich abgeschlossen.
-)
+:: 3. Powershell-Script herunterladen
+powershell -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/deployment/client-installation.ps1' -OutFile 'C:\Temp\client-installation.ps1'"
 
-REM Warten kurz zur Sicherheit (optional, kann entfernt werden)
-timeout /t 2 /nobreak >nul
+:: 4. Script als Admin ausführen und auf Beendigung warten
+powershell -ExecutionPolicy Bypass -NoProfile -File "C:\Temp\client-installation.ps1"
 
-REM Aufräumen: Skript und Verzeichnis löschen
-del /f /q "%scriptFile%"
-rmdir /s /q "%tempDir%"
+:: 5. Aufräumen: Script und Ordner wieder löschen
+rd /s /q "C:\Temp"
 
-endlocal
+exit /b
