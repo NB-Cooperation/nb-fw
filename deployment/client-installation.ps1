@@ -49,8 +49,9 @@ Start-Process .\rustdesk.exe --silent-install
 Start-Sleep -seconds 20
 
 Set-Location "$($env:ProgramFiles)\RustDesk"
-Start-Process .\rustdesk.exe --uninstall-service
 
+Start-Process .\rustdesk.exe --uninstall-service
+Start-Sleep -seconds 5
 Write-Output "Installing config file"
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
 Remove-Item -Path $filepath -Force
