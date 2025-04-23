@@ -61,6 +61,14 @@ if ($arrService -eq $null)
     $arrService = Get-Service -Name $ServiceName
 }
 
+while ($arrService.Status -ne 'Running')
+{
+    Start-Service $ServiceName
+    Start-Sleep -seconds 5
+    $arrService.Refresh()
+}
+
+
 Write-Output "Installing config file"
 Stop-Service $ServiceName
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
@@ -69,12 +77,4 @@ Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/h
 Start-Sleep -seconds 3
 Start-Service $ServiceName
 
-while ($arrService.Status -ne 'Running')
-{
-    Start-Service $ServiceName
-    Start-Sleep -seconds 5
-    $arrService.Refresh()
-}
-
-Write-Output "Installing Rustdesk completed"
-Start-Sleep -seconds 5
+Restart-Computer -Force
