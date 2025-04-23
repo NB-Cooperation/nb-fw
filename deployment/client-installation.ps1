@@ -73,5 +73,3 @@ while ($arrService.Status -ne 'Running')
     Start-Sleep -seconds 5
     $arrService.Refresh()
 }
-
-Restart-Computer -Force
