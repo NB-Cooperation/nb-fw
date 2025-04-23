@@ -63,6 +63,7 @@ if ($arrService -eq $null)
 
 Stop-Service $ServiceName
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
+Remove-Item -Path $filepath -Force
 Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
 Start-Sleep -seconds 5
 Start-Service $ServiceName
