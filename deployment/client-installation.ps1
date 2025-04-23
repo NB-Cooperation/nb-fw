@@ -41,38 +41,15 @@ if (!(Test-Path C:\Temp))
 {
     New-Item -ItemType Directory -Force -Path C:\Temp | Out-Null
 }
-
-cd C:\Temp
+Set-Location C:\Temp
 
 Start-BitsTransfer -Source $RustDeskOnGitHub.browser_download_url -Destination "rustdesk.exe"
 
 Start-Process .\rustdesk.exe --silent-install
 Start-Sleep -seconds 20
 
-$ServiceName = 'Rustdesk'
-$arrService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
-
-if ($arrService -eq $null)
-{
-    Write-Output "Installing service"
-    cd $env:ProgramFiles\RustDesk
-    Start-Process .\rustdesk.exe --install-service
-    Start-Sleep -seconds 20
-    $arrService = Get-Service -Name $ServiceName
-}
-
-while ($arrService.Status -ne 'Running')
-{
-    Start-Service $ServiceName
-    Start-Sleep -seconds 5
-    $arrService.Refresh()
-}
-
-cd cd $env:ProgramFiles\RustDesk
-Start-Process .\rustdesk.exe
-Start-Sleep -seconds 5
-Stop-Process -Name "rustdesk" -Force
-Start-Service $ServiceName
+Set-Location "$($env:ProgramFiles)\RustDesk"
+Start-Process .\rustdesk.exe --uninstall-service
 
 Write-Output "Installing config file"
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
@@ -80,5 +57,23 @@ Remove-Item -Path $filepath -Force
 Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
 Start-Sleep -seconds 5
 
-Start-Service $ServiceName
-Start-Process .\rustdesk.exe
+$ServiceName = 'Rustdesk'
+$arrService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+
+if ($arrService -eq $null)
+{
+    Write-Output "Installing service"
+    Start-Process .\rustdesk.exe --install-service
+    Start-Sleep -seconds 20
+    $arrService = Get-Service -Name $ServiceName
+}
+
+
+
+
+while ($arrService.Status -ne 'Running')
+{
+    Start-Service $ServiceName
+    Start-Sleep -seconds 5
+    $arrService.Refresh()
+}
