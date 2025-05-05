@@ -50,16 +50,20 @@ Start-Sleep -seconds 20
 
 Set-Location "$($env:ProgramFiles)\RustDesk"
 
-Start-Process .\rustdesk.exe --uninstall-service
-Start-Sleep -seconds 5
+$ServiceName = 'Rustdesk'
+$arrService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
+
+while ($arrService -ne $null)
+{
+    Start-Process .\rustdesk.exe --uninstall-service
+    Start-Sleep -seconds 10
+}
+
 Write-Output "Installing config file"
 $filepath = Join-Path $env:APPDATA "Rustdesk\config\RustDesk2.toml"
 Remove-Item -Path $filepath -Force
 Invoke-WebRequest "https://raw.githubusercontent.com/NB-Cooperation/nb-fw/refs/heads/main/config" -OutFile $filePath
 Start-Sleep -seconds 5
-
-$ServiceName = 'Rustdesk'
-$arrService = Get-Service -Name $ServiceName -ErrorAction SilentlyContinue
 
 if ($arrService -eq $null)
 {
